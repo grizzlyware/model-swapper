@@ -6,6 +6,7 @@ use Grizzlyware\ModelSwapper\Services\ModelSwapperService;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\RenamedCountryModel;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
 
 class ModelSwapperServiceTest extends TestCase
@@ -36,6 +37,16 @@ class ModelSwapperServiceTest extends TestCase
         $this->markTestSkipped();
     }
 
+    public function testExceptionIsThrownIfOriginalClassIsNotLaravelModel(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testExceptionIsThrownIfReplacementClassDoesNotUseIsReplacementModelTrait(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testReplacementClassIsReturnedFromQueryBuilder(): void
     {
         $this->modelSwapper->swap(
@@ -45,6 +56,19 @@ class ModelSwapperServiceTest extends TestCase
 
         $this->assertInstanceOf(
             ReplacementCountry::class,
+            OriginalCountry::query()->firstOrFail()
+        );
+    }
+
+    public function testReplacementClassIsReturnedFromQueryBuilderIfNameIsDifferent(): void
+    {
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            RenamedCountryModel::class
+        );
+
+        $this->assertInstanceOf(
+            RenamedCountryModel::class,
             OriginalCountry::query()->firstOrFail()
         );
     }

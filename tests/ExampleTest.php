@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Grizzlyware\ModelSwapper\Tests;
 
 use PHPUnit\Framework\TestCase;
 

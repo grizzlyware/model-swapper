@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     use RefreshDatabase;
-    
+
     protected function defineEnvironment($app)
     {
         // Setup default database to use sqlite :memory:

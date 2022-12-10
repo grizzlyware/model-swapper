@@ -19,8 +19,8 @@
     verbose="true"
 >
     <testsuites>
-        <testsuite name="Grizzlyware Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Feature Test Suite">
+            <directory>tests/Feature</directory>
         </testsuite>
     </testsuites>
     <coverage>

@@ -22,4 +22,3 @@ return new class () extends \Illuminate\Database\Migrations\Migration {
         Schema::dropIfExists('countries');
     }
 };
-

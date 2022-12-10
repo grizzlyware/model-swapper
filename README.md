@@ -51,7 +51,7 @@ Please notify contact@grizzlyware.com about any security vulnerabilities, do not
 ## Credits
 
 - [Grizzlyware Ltd](https://github.com/grizzlyware)
-- [All Contributors](graphs/contributors)
+- [All Contributors](../../contributors)
 
 ## License
 

@@ -8,4 +8,3 @@ class Country extends Model
 {
     //
 }
-

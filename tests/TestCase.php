@@ -8,6 +8,11 @@ class TestCase extends \Orchestra\Testbench\TestCase
 {
     use RefreshDatabase;
 
+    protected function defineDatabaseMigrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/Database/Migrations');
+    }
+
     protected function defineEnvironment($app)
     {
         // Setup default database to use sqlite :memory:

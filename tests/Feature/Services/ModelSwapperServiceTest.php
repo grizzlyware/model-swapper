@@ -3,7 +3,6 @@
 namespace Grizzlyware\ModelSwapper\Tests\Feature\Services;
 
 use Grizzlyware\ModelSwapper\Services\ModelSwapperService;
-use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\RenamedCountryModel;
@@ -75,7 +74,6 @@ class ModelSwapperServiceTest extends TestCase
 
     public function testReplacementClassIsNotReturnedIfNotSwapped(): void
     {
-
         $this->assertInstanceOf(
             OriginalCountry::class,
             OriginalCountry::query()->firstOrFail()

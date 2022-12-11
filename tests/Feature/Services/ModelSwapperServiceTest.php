@@ -3,9 +3,15 @@
 namespace Grizzlyware\ModelSwapper\Tests\Feature\Services;
 
 use Grizzlyware\ModelSwapper\Services\ModelSwapperService;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\Person;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Person as ReplacementPerson;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\PersonWithoutRequiredTrait;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\RenamedCountryModel;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\ReplacementNonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
 
 class ModelSwapperServiceTest extends TestCase
@@ -33,17 +39,48 @@ class ModelSwapperServiceTest extends TestCase
 
     public function testExceptionIsThrownIfReplacementDoesNotExtendOriginal(): void
     {
-        $this->markTestSkipped();
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->expectExceptionMessage(sprintf(
+            "Replacement class '%s' does not extend original class '%s'",
+            ReplacementPerson::class,
+            Country::class
+        ));
+
+        $this->modelSwapper->swap(
+            Country::class,
+            ReplacementPerson::class,
+        );
     }
 
     public function testExceptionIsThrownIfOriginalClassIsNotLaravelModel(): void
     {
-        $this->markTestSkipped();
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->expectExceptionMessage(sprintf(
+            "Original class '%s' is not an Eloquent model",
+            NonEloquentModel::class
+        ));
+
+        $this->modelSwapper->swap(
+            NonEloquentModel::class,
+            ReplacementNonEloquentModel::class,
+        );
     }
 
     public function testExceptionIsThrownIfReplacementClassDoesNotUseIsReplacementModelTrait(): void
     {
-        $this->markTestSkipped();
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->expectExceptionMessage(sprintf(
+            "Replacement class '%s' does not use IsReplacementModel trait",
+            PersonWithoutRequiredTrait::class
+        ));
+
+        $this->modelSwapper->swap(
+            Person::class,
+            PersonWithoutRequiredTrait::class,
+        );
     }
 
     public function testReplacementClassIsReturnedFromQueryBuilder(): void

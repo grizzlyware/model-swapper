@@ -17,6 +17,7 @@ use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Person as Replace
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\PersonWithoutRequiredTrait;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\RenamedCountryModel;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\ReplacementNonEloquentModel;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Tag as ReplacementTag;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
 
 /**
@@ -215,12 +216,43 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
     public function testMorphToManyRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalTag::class,
+            ReplacementTag::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        $this->assertInstanceOf(
+            ReplacementTag::class,
+            OriginalCountry::query()->firstOrFail()->tags->firstOrFail()
+        );
     }
 
     public function testMorphedByManyRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalTag::class,
+            ReplacementTag::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        /** @var OriginalTag $tag */
+        $tag = OriginalTag::query()->get()->firstOrFail(function(OriginalTag $tag): bool {
+            return count($tag->countries) > 0;
+        });
+
+        $this->assertInstanceOf(
+            ReplacementCountry::class,
+            $tag->countries->firstOrFail()
+        );
     }
 
     public function testServiceResolves(): void

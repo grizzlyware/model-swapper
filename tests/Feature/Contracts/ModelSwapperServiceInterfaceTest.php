@@ -100,17 +100,66 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
     public function testHasManyRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalPerson::class,
+            ReplacementPerson::class
+        );
+
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalCountry::query()->firstOrFail()->people->firstOrFail()
+        );
     }
 
     public function testHasOneThroughRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalContinent::class,
+            ReplacementContinent::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalPerson::class,
+            ReplacementPerson::class
+        );
+
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalContinent::query()->firstOrFail()->leader
+        );
     }
 
     public function testHasManyThroughRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalContinent::class,
+            ReplacementContinent::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalPerson::class,
+            ReplacementPerson::class
+        );
+
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalContinent::query()->firstOrFail()->people->firstOrFail()
+        );
     }
 
     public function testMorphToRelationLoadsCorrectly(): void

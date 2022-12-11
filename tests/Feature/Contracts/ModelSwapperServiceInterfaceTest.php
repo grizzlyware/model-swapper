@@ -245,7 +245,7 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         );
 
         /** @var OriginalTag $tag */
-        $tag = OriginalTag::query()->get()->firstOrFail(function(OriginalTag $tag): bool {
+        $tag = OriginalTag::query()->get()->firstOrFail(function (OriginalTag $tag): bool {
             return count($tag->countries) > 0;
         });
 

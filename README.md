@@ -8,16 +8,18 @@ This package can be used to use your own applications implementation of a model 
 
 Extending a vendor's class is already possible, but you cannot change vendors invocation of the class. All references will still point to the original class name and namespace.
 
-This package will change the actual class that is returned from Eloquent query builders, including `all()`, `first()`, `findOrFail()` etc.
+This package will change the actual class that is returned from Eloquent query builders, including `all()`, `get()`,  `first()`, `findOrFail()` etc.
 
 For example:
 
 ```php
 // Code which may exist out of your control, in a vendor's package for example
-\Vendor\Package\Models\CountryCode::firstOrFail() // \Vendor\Package\Models\CountryCode is returned
+\Vendor\Package\Models\CountryCode::firstOrFail()
+// \Vendor\Package\Models\CountryCode is returned
 
 // With Model Swapper
-\Vendor\Package\Models\CountryCode::firstOrFail() // \App\Models\CountryCode is returned
+\Vendor\Package\Models\CountryCode::firstOrFail()
+// \App\Models\CountryCode is returned
 ```
 
 ## Installation
@@ -31,7 +33,35 @@ composer require grizzlyware/model-swapper
 ## Usage
 
 ```php
-// TODO
+use Grizzlyware\ModelSwapper\Facades\ModelSwapper;
+use Grizzlyware\ModelSwapper\Traits\IsReplacementModel;
+use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
+
+// Add the IsReplacementModel trait to your replacement class
+class YourApplicationsClass extends ClassFromVendorPackage
+{
+    use IsReplacementModel;
+}
+
+// Swap the model out - this would usually be in your AppServiceProvider, in the boot method.
+ModelSwapper::swap(
+    ClassFromVendorPackage::class,
+    YourApplicationsClass::class
+);
+
+// From now on, all queries for ClassFromVendorPackage will return instances of YourApplicationsClass
+
+// Or typehint from the container
+public function __construct(ModelSwapperServiceInterface::class $modelSwapper)
+
+// Or resolve from the container
+resolve(ModelSwapperServiceInterface::class)->swap(
+    ClassFromVendorPackage::class,
+    YourApplicationsClass::class
+);
+
+// You can access the original, non-replaced model query like so:
+YourApplicationsClass::replacedModelQuery()->firstOrFail();
 ```
 
 ## Testing

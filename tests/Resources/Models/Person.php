@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Person extends Model
 {
+    protected $fillable = [
+        'country_id',
+    ];
+
     public function country(): HasOne
     {
         return $this->hasOne(Country::class);

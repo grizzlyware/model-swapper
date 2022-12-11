@@ -19,6 +19,7 @@ return new class () extends \Illuminate\Database\Migrations\Migration {
 
         Schema::create('images', function (Blueprint $table) {
             $table->id();
+            $table->morphs('imageable');
             $table->timestamps();
         });
 
@@ -30,6 +31,13 @@ return new class () extends \Illuminate\Database\Migrations\Migration {
 
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
+        });
+
+        Schema::create('taggables', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('tag_id');
+            $table->morphs('taggable');
             $table->timestamps();
         });
     }

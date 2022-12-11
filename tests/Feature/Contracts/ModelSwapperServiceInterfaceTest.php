@@ -4,10 +4,11 @@ namespace Grizzlyware\ModelSwapper\Tests\Feature\Contracts;
 
 use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Continent as OriginalContinent;
-use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image as OriginalImage;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
-use Grizzlyware\ModelSwapper\Tests\Resources\Models\Person;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\Person as OriginalPerson;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\Tag as OriginalTag;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Person as ReplacementPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\PersonWithoutRequiredTrait;
@@ -30,11 +31,34 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
     private function setupModelData(): void
     {
+        /**
+         * Create the models
+         */
+        /** @var OriginalContinent $continent */
         $continent = OriginalContinent::query()->create();
 
-        OriginalCountry::query()->create([
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->create([
             'continent_id' => $continent->id,
         ]);
+
+        /** @var OriginalPerson $person */
+        $person = OriginalPerson::query()->create([
+            'country_id' => $country->id,
+        ]);
+
+        $image1 = new OriginalImage();
+        $image2 = new OriginalImage();
+
+        /** @var OriginalTag $tag1 */
+        $tag1 = OriginalTag::query()->create();
+
+        /**
+         * Associate polymorphic relationships
+         */
+        $continent->photos()->save($image1);
+        $person->profilePhoto()->save($image2);
+        $country->tags()->attach($tag1->id);
     }
 
     public function testHasOneRelationLoadsCorrectly(): void
@@ -120,11 +144,11 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         $this->expectExceptionMessage(sprintf(
             "Replacement class '%s' does not extend original class '%s'",
             ReplacementPerson::class,
-            Country::class
+            OriginalCountry::class
         ));
 
         $this->modelSwapper->swap(
-            Country::class,
+            OriginalCountry::class,
             ReplacementPerson::class,
         );
     }
@@ -154,7 +178,7 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         ));
 
         $this->modelSwapper->swap(
-            Person::class,
+            OriginalPerson::class,
             PersonWithoutRequiredTrait::class,
         );
     }

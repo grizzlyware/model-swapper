@@ -1,8 +1,8 @@
 <?php
 
-namespace Grizzlyware\ModelSwapper\Tests\Feature\Services;
+namespace Grizzlyware\ModelSwapper\Tests\Feature\Contracts;
 
-use Grizzlyware\ModelSwapper\Services\ModelSwapperService;
+use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
@@ -14,17 +14,25 @@ use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\RenamedCountryMod
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\ReplacementNonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
 
-class ModelSwapperServiceTest extends TestCase
+class ModelSwapperServiceInterfaceTest extends TestCase
 {
-    private ModelSwapperService $modelSwapper;
+    private ModelSwapperServiceInterface $modelSwapper;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->modelSwapper = resolve(ModelSwapperService::class);
+        $this->modelSwapper = resolve(ModelSwapperServiceInterface::class);
 
-        OriginalCountry::create();
+        OriginalCountry::query()->create();
+    }
+
+    public function testServiceResolves(): void
+    {
+        $this->assertInstanceOf(
+            ModelSwapperServiceInterface::class,
+            resolve(ModelSwapperServiceInterface::class)
+        );
     }
 
     public function testCanSwapModelWithoutException(): void

@@ -13,6 +13,11 @@ class TestCase extends \Orchestra\Testbench\TestCase
         $this->loadMigrationsFrom(__DIR__ . '/Database/Migrations');
     }
 
+    public function ignorePackageDiscoveriesFrom(): array
+    {
+        return [];
+    }
+
     protected function defineEnvironment($app)
     {
         // Setup default database to use sqlite :memory:

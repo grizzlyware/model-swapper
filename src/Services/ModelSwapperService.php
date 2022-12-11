@@ -2,12 +2,13 @@
 
 namespace Grizzlyware\ModelSwapper\Services;
 
+use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 use Grizzlyware\ModelSwapper\Traits\IsReplacementModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
-class ModelSwapperService
+class ModelSwapperService implements ModelSwapperServiceInterface
 {
     /**
      * @param class-string<Model> $original

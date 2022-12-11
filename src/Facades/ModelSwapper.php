@@ -2,7 +2,7 @@
 
 namespace Grizzlyware\ModelSwapper\Facades;
 
-use Grizzlyware\ModelSwapper\Services\ModelSwapperService;
+use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -12,6 +12,6 @@ class ModelSwapper extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return ModelSwapperService::class;
+        return ModelSwapperServiceInterface::class;
     }
 }

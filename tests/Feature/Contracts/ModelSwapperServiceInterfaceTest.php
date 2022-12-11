@@ -9,6 +9,7 @@ use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image as OriginalImage;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Person as OriginalPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Tag as OriginalTag;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Continent as ReplacementContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Person as ReplacementPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\PersonWithoutRequiredTrait;
@@ -63,12 +64,38 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
     public function testHasOneRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalPerson::class,
+            ReplacementPerson::class
+        );
+
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalCountry::query()->firstOrFail()->leader
+        );
     }
 
     public function testBelongsToRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalPerson::class,
+            ReplacementPerson::class
+        );
+
+        $this->assertInstanceOf(
+            ReplacementCountry::class,
+            OriginalPerson::query()->firstOrFail()->country
+        );
     }
 
     public function testHasManyRelationLoadsCorrectly(): void

@@ -194,7 +194,23 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
     public function testMorphOneRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalImage::class,
+            ReplacementImage::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalPerson::class,
+            ReplacementPerson::class
+        );
+
+        /** @var OriginalPerson $person */
+        $person = OriginalPerson::query()->firstOrFail();
+
+        $this->assertInstanceOf(
+            ReplacementImage::class,
+            $person->profilePhoto
+        );
     }
 
     public function testMorphToManyRelationLoadsCorrectly(): void

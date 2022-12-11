@@ -4,7 +4,6 @@ namespace Grizzlyware\ModelSwapper\Tests\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Person extends Model

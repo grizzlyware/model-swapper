@@ -21,11 +21,24 @@ class ModelSwapperService implements ModelSwapperServiceInterface
         $this->assertReplacementExtendsOriginal($original, $replacement);
         $this->assertReplacementModelUsesRequiredTrait($replacement);
 
-        $original::addGlobalScope('swapModel', function (Builder $builder) use ($replacement): void {
+        $original::addGlobalScope(
+            $this->getSwappingGlobalScopeName($original, $replacement),
+            $this->makeSwapModelScopeClosure($replacement)
+        );
+    }
+
+    private function makeSwapModelScopeClosure(string $replacement): \Closure
+    {
+        return function (Builder $builder) use ($replacement): void {
             $builder->setModel(
                 $replacement::query()->getModel()
             );
-        });
+        };
+    }
+
+    private function getSwappingGlobalScopeName(string $original, string $replacement): string
+    {
+        return "swapModel-{$original}-{$replacement}";
     }
 
     /**

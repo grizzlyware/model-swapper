@@ -321,7 +321,7 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
         // Eager loaded
         /** @var OriginalTag $tag */
-        $tag = OriginalTag::query()->with('countries')->get()->firstOrFail(function(OriginalTag $tag): bool {
+        $tag = OriginalTag::query()->with('countries')->get()->firstOrFail(function (OriginalTag $tag): bool {
             return count($tag->countries) > 0;
         });
 

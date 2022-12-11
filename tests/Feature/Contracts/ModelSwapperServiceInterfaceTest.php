@@ -5,17 +5,24 @@ namespace Grizzlyware\ModelSwapper\Tests\Feature\Contracts;
 use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Continent as OriginalContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image as OriginalImage;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Person as OriginalPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Tag as OriginalTag;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Continent as ReplacementContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
+use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Image as ReplacementImage;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Person as ReplacementPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\PersonWithoutRequiredTrait;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\RenamedCountryModel;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\ReplacementNonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
 
+/**
+ * @todo Test eager loading
+ * @todo Test relation query loading
+ */
 class ModelSwapperServiceInterfaceTest extends TestCase
 {
     private ModelSwapperServiceInterface $modelSwapper;
@@ -163,7 +170,26 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
     public function testMorphToRelationLoadsCorrectly(): void
     {
-        $this->markTestSkipped();
+        $this->modelSwapper->swap(
+            OriginalImage::class,
+            ReplacementImage::class
+        );
+
+        $this->modelSwapper->swap(
+            OriginalContinent::class,
+            ReplacementContinent::class
+        );
+
+        /** @var OriginalImage $image */
+        $image = Image::query()->where(
+            'imageable_type',
+            OriginalContinent::class
+        )->firstOrFail();
+
+        $this->assertInstanceOf(
+            ReplacementContinent::class,
+            $image->imageable
+        );
     }
 
     public function testMorphOneRelationLoadsCorrectly(): void

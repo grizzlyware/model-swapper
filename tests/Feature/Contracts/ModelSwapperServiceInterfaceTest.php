@@ -81,9 +81,16 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementPerson::class
         );
 
+        // Lazy loaded
         $this->assertInstanceOf(
             ReplacementPerson::class,
             OriginalCountry::query()->firstOrFail()->leader
+        );
+
+        // Eager loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalCountry::query()->with('leader')->firstOrFail()->leader
         );
     }
 
@@ -99,9 +106,16 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementPerson::class
         );
 
+        // Lazy loaded
         $this->assertInstanceOf(
             ReplacementCountry::class,
             OriginalPerson::query()->firstOrFail()->country
+        );
+
+        // Eager loaded
+        $this->assertInstanceOf(
+            ReplacementCountry::class,
+            OriginalPerson::query()->with('country')->firstOrFail()->country
         );
     }
 
@@ -117,9 +131,16 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementPerson::class
         );
 
+        // Lazy loaded
         $this->assertInstanceOf(
             ReplacementPerson::class,
             OriginalCountry::query()->firstOrFail()->people->firstOrFail()
+        );
+
+        // Eager loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalCountry::query()->with('people')->firstOrFail()->people->firstOrFail()
         );
     }
 
@@ -140,9 +161,16 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementPerson::class
         );
 
+        // Lazy loaded
         $this->assertInstanceOf(
             ReplacementPerson::class,
             OriginalContinent::query()->firstOrFail()->leader
+        );
+
+        // Eager loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalContinent::query()->with('leader')->firstOrFail()->leader
         );
     }
 
@@ -163,9 +191,16 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementPerson::class
         );
 
+        // Lazy loaded
         $this->assertInstanceOf(
             ReplacementPerson::class,
             OriginalContinent::query()->firstOrFail()->people->firstOrFail()
+        );
+
+        // Eager loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalContinent::query()->with('people')->firstOrFail()->people->firstOrFail()
         );
     }
 
@@ -181,11 +216,24 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementContinent::class
         );
 
+        // Lazy loaded
         /** @var OriginalImage $image */
         $image = Image::query()->where(
             'imageable_type',
             OriginalContinent::class
         )->firstOrFail();
+
+        $this->assertInstanceOf(
+            ReplacementContinent::class,
+            $image->imageable
+        );
+
+        // Eager loaded
+        /** @var OriginalImage $image */
+        $image = Image::query()->where(
+            'imageable_type',
+            OriginalContinent::class
+        )->with('imageable')->firstOrFail();
 
         $this->assertInstanceOf(
             ReplacementContinent::class,
@@ -205,8 +253,18 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementPerson::class
         );
 
+        // Lazy loaded
         /** @var OriginalPerson $person */
         $person = OriginalPerson::query()->firstOrFail();
+
+        $this->assertInstanceOf(
+            ReplacementImage::class,
+            $person->profilePhoto
+        );
+
+        // Eager loaded
+        /** @var OriginalPerson $person */
+        $person = OriginalPerson::query()->with('profilePhoto')->firstOrFail();
 
         $this->assertInstanceOf(
             ReplacementImage::class,
@@ -226,9 +284,16 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementCountry::class
         );
 
+        // Lazy loaded
         $this->assertInstanceOf(
             ReplacementTag::class,
             OriginalCountry::query()->firstOrFail()->tags->firstOrFail()
+        );
+
+        // Eager loaded
+        $this->assertInstanceOf(
+            ReplacementTag::class,
+            OriginalCountry::query()->with('tags')->firstOrFail()->tags->firstOrFail()
         );
     }
 
@@ -244,8 +309,20 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             ReplacementCountry::class
         );
 
+        // Lazy loaded
         /** @var OriginalTag $tag */
         $tag = OriginalTag::query()->get()->firstOrFail(function(OriginalTag $tag): bool {
+            return count($tag->countries) > 0;
+        });
+
+        $this->assertInstanceOf(
+            ReplacementCountry::class,
+            $tag->countries->firstOrFail()
+        );
+
+        // Eager loaded
+        /** @var OriginalTag $tag */
+        $tag = OriginalTag::query()->with('countries')->get()->firstOrFail(function(OriginalTag $tag): bool {
             return count($tag->countries) > 0;
         });
 

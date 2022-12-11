@@ -12,7 +12,7 @@ class ModelSwapperService implements ModelSwapperServiceInterface
 {
     /**
      * @param class-string<Model> $original
-     * @param class-string<Model> $replacement
+     * @param class-string<Model&IsReplacementModel> $replacement
      * @throws InvalidArgumentException
      */
     public function swap(string $original, string $replacement): void
@@ -22,7 +22,7 @@ class ModelSwapperService implements ModelSwapperServiceInterface
         $this->assertReplacementModelUsesRequiredTrait($replacement);
 
         $original::addGlobalScope(
-            $this->getSwappingGlobalScopeName($original, $replacement),
+            $replacement::getModelSwappingGlobalScopeName(),
             $this->makeSwapModelScopeClosure($replacement)
         );
     }
@@ -38,11 +38,6 @@ class ModelSwapperService implements ModelSwapperServiceInterface
                 $replacement::query()->getModel()
             );
         };
-    }
-
-    private function getSwappingGlobalScopeName(string $original, string $replacement): string
-    {
-        return "swapModel-{$original}-{$replacement}";
     }
 
     /**

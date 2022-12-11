@@ -19,12 +19,19 @@ trait IsReplacementModel
         return $this->replacedModel;
     }
 
+    public static function getModelSwappingGlobalScopeName(): string
+    {
+        return 'swapModel';
+    }
+
     public static function replacedModelQuery(): Builder
     {
         return (new static())
             ->getReplacedModelInstance()
-            // TODO without global scope X
             ->newQuery()
+            ->withoutGlobalScope(
+                static::getModelSwappingGlobalScopeName()
+            )
         ;
     }
 

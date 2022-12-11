@@ -5,8 +5,12 @@ namespace Grizzlyware\ModelSwapper\Tests\Feature\Traits;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
+use Grizzlyware\ModelSwapper\Traits\IsReplacementModel;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
+/**
+ * @see IsReplacementModel
+ */
 class IsReplacementModelTest extends TestCase
 {
     protected function setUp(): void

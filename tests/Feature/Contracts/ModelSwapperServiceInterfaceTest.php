@@ -35,6 +35,19 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         );
     }
 
+    public function testGettingReplacedModelQueryReturnsReplacedModel(): void
+    {
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        $this->assertEquals(
+            OriginalCountry::class,
+            get_class(ReplacementCountry::replacedModelQuery()->firstOrFail())
+        );
+    }
+
     public function testCanSwapModelWithoutException(): void
     {
         $this->modelSwapper->swap(

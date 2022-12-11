@@ -21,7 +21,6 @@ use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Tag as Replacemen
 use Grizzlyware\ModelSwapper\Tests\TestCase;
 
 /**
- * @todo Test eager loading
  * @todo Test relation query loading
  */
 class ModelSwapperServiceInterfaceTest extends TestCase

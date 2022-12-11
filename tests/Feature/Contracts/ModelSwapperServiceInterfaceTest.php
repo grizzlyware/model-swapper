@@ -3,6 +3,7 @@
 namespace Grizzlyware\ModelSwapper\Tests\Feature\Contracts;
 
 use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
+use Grizzlyware\ModelSwapper\Tests\Resources\Models\Continent as OriginalContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
@@ -24,7 +25,16 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
         $this->modelSwapper = resolve(ModelSwapperServiceInterface::class);
 
-        OriginalCountry::query()->create();
+        $this->setupModelData();
+    }
+
+    private function setupModelData(): void
+    {
+        $continent = OriginalContinent::query()->create();
+
+        OriginalCountry::query()->create([
+            'continent_id' => $continent->id,
+        ]);
     }
 
     public function testHasOneRelationLoadsCorrectly(): void

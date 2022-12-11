@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Country extends Model
 {
+    protected $fillable = [
+        'continent_id',
+    ];
+
     public function people(): HasMany
     {
         return $this->hasMany(Person::class);

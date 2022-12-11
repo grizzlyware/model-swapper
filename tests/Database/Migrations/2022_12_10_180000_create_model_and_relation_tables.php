@@ -13,6 +13,7 @@ return new class () extends \Illuminate\Database\Migrations\Migration {
 
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('continent_id');
             $table->timestamps();
         });
 
@@ -23,6 +24,7 @@ return new class () extends \Illuminate\Database\Migrations\Migration {
 
         Schema::create('people', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('country_id');
             $table->timestamps();
         });
 

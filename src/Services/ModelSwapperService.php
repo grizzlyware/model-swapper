@@ -27,6 +27,10 @@ class ModelSwapperService implements ModelSwapperServiceInterface
         );
     }
 
+    /**
+     * @param class-string<Model> $replacement
+     * @return \Closure
+     */
     private function makeSwapModelScopeClosure(string $replacement): \Closure
     {
         return function (Builder $builder) use ($replacement): void {

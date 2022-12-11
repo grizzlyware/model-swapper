@@ -2,6 +2,7 @@
 
 namespace Grizzlyware\ModelSwapper\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -16,6 +17,15 @@ trait IsReplacementModel
         }
 
         return $this->replacedModel;
+    }
+
+    public static function replacedModelQuery(): Builder
+    {
+        return (new static())
+            ->getReplacedModelInstance()
+            // TODO without global scope X
+            ->newQuery()
+        ;
     }
 
     public function getMorphClass(): string

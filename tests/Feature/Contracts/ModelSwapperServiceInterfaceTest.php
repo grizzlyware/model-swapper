@@ -9,7 +9,6 @@ use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image as OriginalImage;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Person as OriginalPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Tag as OriginalTag;
-use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Continent as ReplacementContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Person as ReplacementPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\PersonWithoutRequiredTrait;

@@ -20,9 +20,6 @@ use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\ReplacementNonElo
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Tag as ReplacementTag;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
 
-/**
- * @todo Test relation query loading
- */
 class ModelSwapperServiceInterfaceTest extends TestCase
 {
     private ModelSwapperServiceInterface $modelSwapper;
@@ -86,6 +83,12 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             OriginalCountry::query()->firstOrFail()->leader
         );
 
+        // Relation query loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalCountry::query()->firstOrFail()->leader()->firstOrFail()
+        );
+
         // Eager loaded
         $this->assertInstanceOf(
             ReplacementPerson::class,
@@ -111,6 +114,12 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             OriginalPerson::query()->firstOrFail()->country
         );
 
+        // Relation query loaded
+        $this->assertInstanceOf(
+            ReplacementCountry::class,
+            OriginalPerson::query()->firstOrFail()->country()->firstOrFail()
+        );
+
         // Eager loaded
         $this->assertInstanceOf(
             ReplacementCountry::class,
@@ -134,6 +143,12 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         $this->assertInstanceOf(
             ReplacementPerson::class,
             OriginalCountry::query()->firstOrFail()->people->firstOrFail()
+        );
+
+        // Relation query loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalCountry::query()->firstOrFail()->people()->firstOrFail()
         );
 
         // Eager loaded
@@ -166,6 +181,12 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             OriginalContinent::query()->firstOrFail()->leader
         );
 
+        // Relation query loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalContinent::query()->firstOrFail()->leader()->firstOrFail()
+        );
+
         // Eager loaded
         $this->assertInstanceOf(
             ReplacementPerson::class,
@@ -194,6 +215,12 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         $this->assertInstanceOf(
             ReplacementPerson::class,
             OriginalContinent::query()->firstOrFail()->people->firstOrFail()
+        );
+
+        // Relation query loaded
+        $this->assertInstanceOf(
+            ReplacementPerson::class,
+            OriginalContinent::query()->firstOrFail()->people()->firstOrFail()
         );
 
         // Eager loaded
@@ -225,6 +252,18 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         $this->assertInstanceOf(
             ReplacementContinent::class,
             $image->imageable
+        );
+
+        // Relation query loaded
+        /** @var OriginalImage $image */
+        $image = Image::query()->where(
+            'imageable_type',
+            OriginalContinent::class
+        )->firstOrFail();
+
+        $this->assertInstanceOf(
+            ReplacementContinent::class,
+            $image->imageable()->firstOrFail()
         );
 
         // Eager loaded
@@ -261,6 +300,15 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             $person->profilePhoto
         );
 
+        // Relation query loaded
+        /** @var OriginalPerson $person */
+        $person = OriginalPerson::query()->firstOrFail();
+
+        $this->assertInstanceOf(
+            ReplacementImage::class,
+            $person->profilePhoto()->firstOrFail()
+        );
+
         // Eager loaded
         /** @var OriginalPerson $person */
         $person = OriginalPerson::query()->with('profilePhoto')->firstOrFail();
@@ -287,6 +335,12 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         $this->assertInstanceOf(
             ReplacementTag::class,
             OriginalCountry::query()->firstOrFail()->tags->firstOrFail()
+        );
+
+        // Relation query loaded
+        $this->assertInstanceOf(
+            ReplacementTag::class,
+            OriginalCountry::query()->firstOrFail()->tags()->firstOrFail()
         );
 
         // Eager loaded
@@ -319,9 +373,20 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             $tag->countries->firstOrFail()
         );
 
+        // Relation query loaded
+        /** @var OriginalTag $tag */
+        $tag = OriginalTag::query()->get()->firstOrFail(function (OriginalTag $tag): bool {
+            return count($tag->countries()->get()) > 0;
+        });
+
+        $this->assertInstanceOf(
+            ReplacementCountry::class,
+            $tag->countries()->firstOrFail()
+        );
+
         // Eager loaded
         /** @var OriginalTag $tag */
-        $tag = OriginalTag::query()->with('countries')->get()->firstOrFail(function(OriginalTag $tag): bool {
+        $tag = OriginalTag::query()->with('countries')->get()->firstOrFail(function (OriginalTag $tag): bool {
             return count($tag->countries) > 0;
         });
 

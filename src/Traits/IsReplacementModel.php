@@ -3,14 +3,10 @@
 namespace Grizzlyware\ModelSwapper\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait IsReplacementModel
 {
-    // TODO
-    /*
-     * This should force relationship methods to redirect to their parent
-     */
-
     private Model $replacedModel;
 
     private function getReplacedModelInstance(): Model
@@ -20,6 +16,34 @@ trait IsReplacementModel
         }
 
         return $this->replacedModel;
+    }
+
+    public function getMorphClass(): string
+    {
+        $morphMap = Relation::morphMap();
+
+        /**
+         * Try to get the current classes morph
+         */
+        if (! empty($morphMap) && in_array(static::class, $morphMap)) {
+            return array_search(static::class, $morphMap, true);
+        }
+
+        /**
+         * Default back to the parents morph
+         */
+        return $this
+            ->getReplacedModelInstance()
+            ->getMorphClass()
+        ;
+    }
+
+    public function joiningTableSegment(): string
+    {
+        return $this
+            ->getReplacedModelInstance()
+            ->joiningTableSegment()
+        ;
     }
 
     public function getForeignKey(): string

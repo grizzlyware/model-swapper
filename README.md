@@ -94,3 +94,4 @@ Please notify contact@grizzlyware.com about any security vulnerabilities, do not
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+

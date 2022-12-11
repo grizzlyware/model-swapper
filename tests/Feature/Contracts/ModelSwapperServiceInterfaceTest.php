@@ -27,6 +27,51 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         OriginalCountry::query()->create();
     }
 
+    public function testHasOneRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testBelongsToRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testHasManyRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testHasOneThroughRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testHasManyThroughRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testMorphToRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testMorphOneRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testMorphToManyRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testMorphedByManyRelationLoadsCorrectly(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testServiceResolves(): void
     {
         $this->assertInstanceOf(

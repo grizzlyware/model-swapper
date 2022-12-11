@@ -35,7 +35,6 @@ composer require grizzlyware/model-swapper
 ```php
 use Grizzlyware\ModelSwapper\Facades\ModelSwapper;
 use Grizzlyware\ModelSwapper\Traits\IsReplacementModel;
-use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 
 // Add the IsReplacementModel trait to your replacement class
 class YourApplicationsClass extends ClassFromVendorPackage
@@ -50,6 +49,12 @@ ModelSwapper::swap(
 );
 
 // From now on, all queries for ClassFromVendorPackage will return instances of YourApplicationsClass
+```
+
+### Advanced usage
+
+```php
+use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 
 // Or typehint from the container
 public function __construct(ModelSwapperServiceInterface::class $modelSwapper)

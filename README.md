@@ -17,7 +17,10 @@ For example:
 \Vendor\Package\Models\CountryCode::firstOrFail()
 // \Vendor\Package\Models\CountryCode is returned
 
-// With Model Swapper
+/**
+* After using Model Swapper
+*/
+
 \Vendor\Package\Models\CountryCode::firstOrFail()
 // \App\Models\CountryCode is returned
 ```

@@ -2,11 +2,20 @@
 
 namespace Grizzlyware\ModelSwapper\Tests;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Reset the morph map
+        Relation::morphMap([], false);
+    }
 
     protected function defineDatabaseMigrations()
     {

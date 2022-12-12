@@ -13,14 +13,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class IsReplacementModelTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        // Reset the morph map
-        Relation::morphMap([], false);
-    }
-
     public function testCanGetOwnMorphKeyWhenSet(): void
     {
         Relation::morphMap([

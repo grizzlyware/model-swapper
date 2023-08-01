@@ -17,12 +17,12 @@
     ],
     "require": {
         "php": "^8.1",
-        "laravel/framework": "^9"
+        "laravel/framework": "^10"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.13",
-        "orchestra/testbench": "^7.15",
-        "phpunit/phpunit": "^9.5"
+        "orchestra/testbench": "^8",
+        "phpunit/phpunit": "^10"
     },
     "autoload": {
         "psr-4": {
@@ -36,7 +36,6 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage",
         "format": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-risky=yes",
         "post-autoload-dump": [
             "@php vendor/bin/testbench package:discover --ansi"

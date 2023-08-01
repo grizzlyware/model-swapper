@@ -36,7 +36,6 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage",
         "format": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-risky=yes",
         "post-autoload-dump": [
             "@php vendor/bin/testbench package:discover --ansi"

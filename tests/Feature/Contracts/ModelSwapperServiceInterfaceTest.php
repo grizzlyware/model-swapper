@@ -3,6 +3,7 @@
 namespace Grizzlyware\ModelSwapper\Tests\Feature\Contracts;
 
 use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
+use Grizzlyware\ModelSwapper\Tests\Resources\Exceptions\CountryUpdatedException;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Continent as OriginalContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image;
@@ -10,6 +11,7 @@ use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image as OriginalImage;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\NonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Person as OriginalPerson;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Tag as OriginalTag;
+use Grizzlyware\ModelSwapper\Tests\Resources\Observers\CountryObserver;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Continent as ReplacementContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Country as ReplacementCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Image as ReplacementImage;
@@ -505,5 +507,49 @@ class ModelSwapperServiceInterfaceTest extends TestCase
             OriginalCountry::class,
             OriginalCountry::query()->firstOrFail()
         );
+    }
+
+    public function testModelObserverOnOriginalModelIsUsedIfObserverRegisteredBeforeSwapping(): void
+    {
+        OriginalCountry::observe(CountryObserver::class);
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->firstOrFail();
+
+        $country->continent()->associate($continent);
+
+        $this->expectException(CountryUpdatedException::class);
+
+        $country->save();
+    }
+
+    public function testModelObserverOnOriginalModelIsUsedIfObserverRegisteredAfterSwapping(): void
+    {
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        OriginalCountry::observe(CountryObserver::class);
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->firstOrFail();
+
+        $country->continent()->associate($continent);
+
+        $this->expectException(CountryUpdatedException::class);
+
+        $country->save();
     }
 }

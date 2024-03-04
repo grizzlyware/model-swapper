@@ -2,6 +2,17 @@
 
 All notable changes to `model-swapper` will be documented in this file.
 
+## V2.0.1 - Fix for model events - 2024-03-04
+
+### What's Changed
+
+* chore(deps): bump actions/checkout from 3 to 4 by @dependabot in https://github.com/grizzlyware/model-swapper/pull/6
+* chore(deps): bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/grizzlyware/model-swapper/pull/7
+* Model events & observers by @mewejo in https://github.com/grizzlyware/model-swapper/pull/8
+* ci: test against php 8.3 by @mewejo in https://github.com/grizzlyware/model-swapper/pull/9
+
+**Full Changelog**: https://github.com/grizzlyware/model-swapper/compare/v2.0...v2.0.1
+
 ## v2.0 - Laravel 10 support - 2023-08-01
 
 ### What's Changed

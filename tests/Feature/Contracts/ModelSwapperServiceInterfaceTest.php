@@ -552,4 +552,48 @@ class ModelSwapperServiceInterfaceTest extends TestCase
 
         $country->save();
     }
+
+    public function testModelObserverOnReplacementModelIsUsedIfObserverRegisteredBeforeSwapping(): void
+    {
+        ReplacementCountry::observe(CountryObserver::class);
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->firstOrFail();
+
+        $country->continent()->associate($continent);
+
+        $this->expectException(CountryUpdatedException::class);
+
+        $country->save();
+    }
+
+    public function testModelObserverOnReplacementModelIsUsedIfObserverRegisteredAfterSwapping(): void
+    {
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        ReplacementCountry::observe(CountryObserver::class);
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->firstOrFail();
+
+        $country->continent()->associate($continent);
+
+        $this->expectException(CountryUpdatedException::class);
+
+        $country->save();
+    }
 }

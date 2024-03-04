@@ -90,27 +90,29 @@ trait IsReplacementModel
     public static function observe($class): void
     {
         $replacedModel = (new static())->getReplacedModelInstance();
-        
+
         $replacedModel::observe($class);
     }
 
     protected function fireModelEvent($event, $halt = true)
     {
-        // First, we will get the proper method to call on the event dispatcher, and then we
-        // will attempt to fire a custom, object based event for the given event. If that
-        // returns a result we can return that result, or we'll call the string events.
-        $method = $halt ? 'until' : 'dispatch';
+        if (!$this->exists) {
+            /** @var class-string<Model> $replacedModelClass */
+            $replacedModelClass = \get_parent_class($this);
 
-        $result = $this->filterModelEventResults(
-            $this->fireCustomModelEvent($event, $method)
-        );
+            /** @var Model $replacedModel */
+            $replacedModel = $replacedModelClass::withoutEvents(fn() => new $replacedModelClass(
+                $this->attributes
+            ));
 
-        if ($result === false) {
-            return false;
+            return $replacedModel->fireModelEvent($event, $halt, true);
         }
 
-        return ! empty($result) ? $result : static::$dispatcher->{$method}(
-            "eloquent.{$event}: " . \get_parent_class($this), $this
-        );
+        return $this
+            ->replacedModelQuery()
+            ->findOrFail($this->getKey())
+            ->setRawAttributes($this->attributes)
+            ->fireModelEvent($event, $halt)
+        ;
     }
 }

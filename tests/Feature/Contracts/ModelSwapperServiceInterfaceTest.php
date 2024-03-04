@@ -4,6 +4,7 @@ namespace Grizzlyware\ModelSwapper\Tests\Feature\Contracts;
 
 use Grizzlyware\ModelSwapper\Contracts\ModelSwapperServiceInterface;
 use Grizzlyware\ModelSwapper\Tests\Resources\Exceptions\CountryUpdatedException;
+use Grizzlyware\ModelSwapper\Tests\Resources\Jobs\CountCountryPopulation;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Continent as OriginalContinent;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Country as OriginalCountry;
 use Grizzlyware\ModelSwapper\Tests\Resources\Models\Image;
@@ -21,6 +22,7 @@ use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\RenamedCountryMod
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\ReplacementNonEloquentModel;
 use Grizzlyware\ModelSwapper\Tests\Resources\ReplacementModels\Tag as ReplacementTag;
 use Grizzlyware\ModelSwapper\Tests\TestCase;
+use Illuminate\Support\Facades\Bus;
 
 class ModelSwapperServiceInterfaceTest extends TestCase
 {
@@ -595,5 +597,93 @@ class ModelSwapperServiceInterfaceTest extends TestCase
         $this->expectException(CountryUpdatedException::class);
 
         $country->save();
+    }
+
+    public function testModelObserverOnOriginalModelFiredOnceIfObserverRegisteredBeforeSwapping(): void
+    {
+        Bus::fake();
+
+        OriginalCountry::observe(CountryObserver::class);
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->create([
+            'continent_id' => $continent->id,
+        ]);
+
+        Bus::assertDispatchedTimes(CountCountryPopulation::class, 1);
+    }
+
+    public function testModelObserverOnOriginalModelFiredOnceIfObserverRegisteredAfterSwapping(): void
+    {
+        Bus::fake();
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        OriginalCountry::observe(CountryObserver::class);
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->create([
+            'continent_id' => $continent->id,
+        ]);
+
+        Bus::assertDispatchedTimes(CountCountryPopulation::class, 1);
+    }
+
+    public function testModelObserverOnReplacementModelFiredOnceIfObserverRegisteredBeforeSwapping(): void
+    {
+        Bus::fake();
+
+        ReplacementCountry::observe(CountryObserver::class);
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->create([
+            'continent_id' => $continent->id,
+        ]);
+
+        Bus::assertDispatchedTimes(CountCountryPopulation::class, 1);
+    }
+
+    public function testModelObserverOnReplacementModelFiredOnceIfObserverRegisteredAfterSwapping(): void
+    {
+        Bus::fake();
+
+        $this->modelSwapper->swap(
+            OriginalCountry::class,
+            ReplacementCountry::class
+        );
+
+        ReplacementCountry::observe(CountryObserver::class);
+
+        /** @var OriginalContinent $continent */
+        $continent = OriginalContinent::query()->create();
+
+        /** @var OriginalCountry $country */
+        $country = OriginalCountry::query()->create([
+            'continent_id' => $continent->id,
+        ]);
+
+        Bus::assertDispatchedTimes(CountCountryPopulation::class, 1);
     }
 }

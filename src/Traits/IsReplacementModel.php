@@ -96,12 +96,12 @@ trait IsReplacementModel
 
     protected function fireModelEvent($event, $halt = true)
     {
-        if (!$this->exists) {
+        if (! $this->exists) {
             /** @var class-string<Model> $replacedModelClass */
             $replacedModelClass = \get_parent_class($this);
 
             /** @var Model $replacedModel */
-            $replacedModel = $replacedModelClass::withoutEvents(fn() => new $replacedModelClass(
+            $replacedModel = $replacedModelClass::withoutEvents(fn () => new $replacedModelClass(
                 $this->attributes
             ));
 
